@@ -11,20 +11,22 @@ namespace FindEmptyFoldersOccurrence
     {
         static void Main(string[] args)
         {
-            var directoryList = GetDirectoryList(@"P:\");
+            var directoryList = GetEmptyDirectoryList(@"P:\");
+
         }
 
-        private static object GetDirectoryList(string searchPath)
+        private static IEnumerable<object> GetEmptyDirectoryList(string searchPath)
         {
             try
             {
-                var files = from directory in Directory.EnumerateDirectories(searchPath, "*.*", SearchOption.AllDirectories)
-                            select new
-                            {
-                                Directory = directory
-                            };
+                var emptyDirectories = from directory in Directory.EnumerateDirectories(searchPath, "*.*", SearchOption.AllDirectories)
+                                  where IsDirectoryEmpty(directory) == true
+                                  select new
+                                  {
+                                      Directory = directory
+                                  };
 
-                return files;
+                return emptyDirectories;
             }
             catch (Exception e)
             {
