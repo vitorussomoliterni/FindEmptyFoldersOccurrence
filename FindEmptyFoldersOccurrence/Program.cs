@@ -12,21 +12,27 @@ namespace FindEmptyFoldersOccurrence
         static void Main(string[] args)
         {
             var directoryList = GetEmptyDirectoryList(@"P:\");
-
+            foreach (var item in directoryList)
+            {
+                Log(item, "test.txt");
+            }
         }
 
-        private static IEnumerable<object> GetEmptyDirectoryList(string searchPath)
+        private static List<string> GetEmptyDirectoryList(string searchPath)
         {
             try
             {
-                var emptyDirectories = from directory in Directory.EnumerateDirectories(searchPath, "*.*", SearchOption.AllDirectories)
-                                  where IsDirectoryEmpty(directory) == true
+                var directories = from directory in Directory.EnumerateDirectories(searchPath, "*.*", SearchOption.AllDirectories)
+                                  where directory.Contains("01_Documents")
+                                  where Directory.GetFileSystemEntries(directory).Length == 0
                                   select new
                                   {
                                       Directory = directory
                                   };
 
-                return emptyDirectories;
+                var collection = directories.Select(c => c.Directory).ToList();
+
+                return collection;
             }
             catch (Exception e)
             {
@@ -36,9 +42,19 @@ namespace FindEmptyFoldersOccurrence
             return null;
         }
 
-        private static bool IsDirectoryEmpty(string path)
+        private static void Log(string message, string path)
         {
-            return !Directory.EnumerateFileSystemEntries(path).Any();
+            try
+            {
+                using (TextWriter w = File.AppendText(path))
+                {
+                    w.WriteLine(message);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Could not log the file: " + e.ToString());
+            }
         }
     }
 }
