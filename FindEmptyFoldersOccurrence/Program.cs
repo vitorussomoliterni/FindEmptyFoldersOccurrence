@@ -24,7 +24,7 @@ namespace FindEmptyFoldersOccurrence
             {
                 var directories = from directory in Directory.EnumerateDirectories(searchPath, "*.*", SearchOption.AllDirectories)
                                   where directory.Contains("01_Documents")
-                                  where Directory.GetFileSystemEntries(directory).Length == 0
+                                  && Directory.GetFileSystemEntries(directory).Length == 0
                                   select new
                                   {
                                       Directory = directory
