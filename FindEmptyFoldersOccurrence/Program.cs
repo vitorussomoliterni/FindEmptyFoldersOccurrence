@@ -11,13 +11,14 @@ namespace FindEmptyFoldersOccurrence
     {
         static void Main(string[] args)
         {
-            var directoryList = GetEmptyDirectoriesList(@"P:\2010\");
-
+            var filename = string.Format("scan result {0}.csv", DateTime.Now.ToString("dd-MM-yyyy"));
+            var directoryList = GetEmptyDirectoriesList(@"P:\");
+            
             var directoryDictionary = OrderDirectories(directoryList);
 
-            foreach (var item in directoryList)
+            foreach (var item in directoryDictionary)
             {
-                Log(item, "test.txt");
+                Log(item.Key, item.Value, filename);
             }
         }
 
@@ -26,13 +27,13 @@ namespace FindEmptyFoldersOccurrence
             Dictionary<string, int> directoryDictionary = new Dictionary<string, int>();
             foreach (var d in directoryList)
             {
-                if (directoryDictionary[d] == 0)
+                if (directoryDictionary.ContainsKey(d))
                 {
-                    directoryDictionary.Add(d, 1);
+                    directoryDictionary[d]++;
                 }
                 else
                 {
-                    directoryDictionary[d]++;
+                    directoryDictionary.Add(d, 1);
                 }
             }
 
@@ -63,13 +64,13 @@ namespace FindEmptyFoldersOccurrence
             return null;
         }
 
-        private static void Log(string message, string path)
+        private static void Log(string message, int count, string path)
         {
             try
             {
                 using (TextWriter w = File.AppendText(path))
                 {
-                    w.WriteLine(message);
+                    w.WriteLine(message + "," + count);
                 }
             }
             catch (Exception e)
