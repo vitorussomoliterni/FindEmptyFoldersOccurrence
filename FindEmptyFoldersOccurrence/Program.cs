@@ -11,11 +11,32 @@ namespace FindEmptyFoldersOccurrence
     {
         static void Main(string[] args)
         {
-            var directoryList = GetEmptyDirectoriesList(@"P:\");
+            var directoryList = GetEmptyDirectoriesList(@"P:\2010\");
+
+            var directoryDictionary = OrderDirectories(directoryList);
+
             foreach (var item in directoryList)
             {
                 Log(item, "test.txt");
             }
+        }
+
+        private static Dictionary<string, int> OrderDirectories(List<string> directoryList)
+        {
+            Dictionary<string, int> directoryDictionary = new Dictionary<string, int>();
+            foreach (var d in directoryList)
+            {
+                if (directoryDictionary[d] == 0)
+                {
+                    directoryDictionary.Add(d, 1);
+                }
+                else
+                {
+                    directoryDictionary[d]++;
+                }
+            }
+
+            return directoryDictionary;
         }
 
         private static List<string> GetEmptyDirectoriesList(string searchPath)
@@ -30,7 +51,7 @@ namespace FindEmptyFoldersOccurrence
                                       Directory = directory
                                   };
 
-                var collection = directories.Select(c => c.Directory).ToList();
+                var collection = directories.Select(c => c.Directory.Substring(c.Directory.LastIndexOf("\\") + 1)).ToList(); // Rename directory to cut the path and leave the name and add them to a list
 
                 return collection;
             }
