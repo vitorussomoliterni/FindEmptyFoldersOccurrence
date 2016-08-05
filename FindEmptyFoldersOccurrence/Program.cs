@@ -11,14 +11,14 @@ namespace FindEmptyFoldersOccurrence
     {
         static void Main(string[] args)
         {
-            var directoryList = GetEmptyDirectoryList(@"P:\");
+            var directoryList = GetEmptyDirectoriesList(@"P:\");
             foreach (var item in directoryList)
             {
                 Log(item, "test.txt");
             }
         }
 
-        private static List<string> GetEmptyDirectoryList(string searchPath)
+        private static List<string> GetEmptyDirectoriesList(string searchPath)
         {
             try
             {
